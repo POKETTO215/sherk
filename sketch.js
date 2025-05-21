@@ -48,7 +48,7 @@ function prepareLayout() {
   charData = [];
 
   fontSize = Math.max(15, Math.min(windowWidth, windowHeight) / 40);
-  lineSpacing = fontSize * 2.0;
+  lineSpacing = fontSize * 2.5;
   letterSpacing = fontSize * 1.2;
 
   textSize(fontSize);
