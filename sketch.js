@@ -1,24 +1,15 @@
 let textLines = `
-And blood-black nothingness began to spin.
-A system of cells interlinked within cells 
-interlinked within one stem.
-And dreadfully distinct against the dark
- a tallwhite fountain played.
-Have you ever been in an institution ?  
-Do they keep you in a cell ?  
-When you're not performing your duties
- do they keep you in a little box ? 
-Interlinked.
-What's it like to hold the hand of 
-someone you love? Interlinked.
-Did they teach you how to feel, 
-finger to finger ? Interlinked.
-Do you long for having your heart ? 
-Do you dream about being interlinked ?
-Do you feel that there's a part
- of you that's missing ?  Interlinked.
-Do you like being separated
- from other people ?  Interlinked.
+Soft-lit and mystic.
+
+with snowfall sifting down.
+
+and a mauve December sunset.
+
+not this gauche flash.
+
+this flesh akimbo.
+
+caught in the glare of your stare.
 `.trim().split('\n');
 let charData = [];
 let fontSize;
