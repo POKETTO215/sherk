@@ -72,7 +72,7 @@ function prepareLayout() {
 
   fontSize = max(15, min(windowWidth, windowHeight) / 40);
   lineSpacing = fontSize * 1.2;
-  letterSpacing = fontSize * 1.2;
+  letterSpacing = fontSize * 0.5;
 
   textSize(fontSize);
   textAlign(CENTER, CENTER);
