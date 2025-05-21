@@ -39,7 +39,7 @@ function windowResized() {
 function prepareLayout() {
   charData = [];
 
-  fontSize = max(15, min(windowWidth, windowHeight) / 40);
+  fontSize = max(20, min(windowWidth, windowHeight) / 40);
   lineSpacing = fontSize * 1.2;
   letterSpacing = fontSize * 1.2;
 
