@@ -126,3 +126,33 @@ function mouseReleased() {
     restoreTimer = null;
   }, 2000);
 }
+
+// ... 你之前的代码 ...
+
+function mousePressed() {
+  isReadingMode = true;
+  targetDistortion = 0;
+  if (restoreTimer) {
+    clearTimeout(restoreTimer);
+    restoreTimer = null;
+  }
+}
+
+function mouseReleased() {
+  isReadingMode = false;
+  restoreTimer = setTimeout(() => {
+    targetDistortion = 1;
+    restoreTimer = null;
+  }, 2000);
+}
+
+// === 移动端触摸兼容 ===
+function touchStarted() {
+  mousePressed();
+  return false; // 防止浏览器页面滑动
+}
+
+function touchEnded() {
+  mouseReleased();
+  return false;
+}
