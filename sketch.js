@@ -1,4 +1,4 @@
-let textLines = `
+let rawText = `
 And blood-black nothingness began to spin.
 A system of cells interlinked within cells interlinked within one stem.
 And dreadfully distinct against the dark, a tallwhite fountain played.
@@ -16,8 +16,9 @@ Within cells interlinked.
 Within cells interlinked.
 Why don’t you say that three times: Within cells interlinked.
 Within cells interlinked. Within cells interlinked. Within cells interlinked.
-`.trim().split('\n');
+`.trim();
 
+let textLines = rawText.split('\n'); // 原始分段
 let charData = [];
 let fontSize;
 let lineSpacing;
@@ -27,9 +28,10 @@ let currentCharIndex = 0;
 let distortionAmount = 1.0;
 let targetDistortion = 1.0;
 let restoreTimer = null;
+let wrappedLines = []; // 自动分行结果
 
 function preload() {
-  // 可选：加载自定义字体
+  // 推荐系统自带字体，兼容好
   // customFont = loadFont('SmileySans-Optimized.ttf');
 }
 
@@ -44,11 +46,32 @@ function windowResized() {
   prepareLayout();
 }
 
+// 自动分行函数，返回每一行
+function wrapLines(textLines, fontSize, letterSpacing, maxLineWidth) {
+  let result = [];
+  for (let l = 0; l < textLines.length; l++) {
+    let line = textLines[l];
+    let currentLine = "";
+    for (let i = 0; i < line.length; i++) {
+      let testLine = currentLine + line[i];
+      let lineWidth = (testLine.length - 1) * letterSpacing;
+      if (lineWidth > maxLineWidth && currentLine.length > 0) {
+        result.push(currentLine);
+        currentLine = line[i];
+      } else {
+        currentLine = testLine;
+      }
+    }
+    if (currentLine.length > 0) result.push(currentLine);
+  }
+  return result;
+}
+
 function prepareLayout() {
   charData = [];
 
-  fontSize = Math.max(15, Math.min(windowWidth, windowHeight) / 40);
-  lineSpacing = fontSize * 2.5;
+  fontSize = max(15, min(windowWidth, windowHeight) / 40);
+  lineSpacing = fontSize * 1.2;
   letterSpacing = fontSize * 1.2;
 
   textSize(fontSize);
@@ -58,26 +81,18 @@ function prepareLayout() {
   let marginX = width * 0.10;
   let maxLineWidth = width - marginX * 2;
 
-  let startY = (height - (textLines.length - 1) * lineSpacing) / 2;
+  // 自动分行，结果是新的每一行（再排版）
+  wrappedLines = wrapLines(textLines, fontSize, letterSpacing, maxLineWidth);
 
-  for (let line = 0; line < textLines.length; line++) {
-    let lineText = textLines[line];
+  let startY = (height - (wrappedLines.length - 1) * lineSpacing) / 2;
 
-    // 动态调整该行字距，使行宽不超过最大宽度
-    let thisLetterSpacing = letterSpacing;
-    if (lineText.length > 1) {
-      let idealSpacing = maxLineWidth / (lineText.length - 1);
-      // 限制最小/最大字距，防止太密集或太稀疏
-      thisLetterSpacing = constrain(idealSpacing, fontSize * 0.25, fontSize * 0.7);
-    }
-    let lineWidth = (lineText.length - 1) * thisLetterSpacing;
-
-    // 居中起点（加上marginX后再加剩余空白的一半）
+  for (let line = 0; line < wrappedLines.length; line++) {
+    let lineText = wrappedLines[line];
+    let lineWidth = (lineText.length - 1) * letterSpacing;
     let centerX = marginX + (maxLineWidth - lineWidth) / 2;
-
     let y = startY + line * lineSpacing;
     for (let i = 0; i < lineText.length; i++) {
-      let x = centerX + i * thisLetterSpacing;
+      let x = centerX + i * letterSpacing;
       let char = lineText[i];
       charData.push({ x, y, baseX: x, baseY: y, char, angle: 0 });
     }
@@ -127,29 +142,10 @@ function mouseReleased() {
   }, 2000);
 }
 
-// ... 你之前的代码 ...
-
-function mousePressed() {
-  isReadingMode = true;
-  targetDistortion = 0;
-  if (restoreTimer) {
-    clearTimeout(restoreTimer);
-    restoreTimer = null;
-  }
-}
-
-function mouseReleased() {
-  isReadingMode = false;
-  restoreTimer = setTimeout(() => {
-    targetDistortion = 1;
-    restoreTimer = null;
-  }, 2000);
-}
-
 // === 移动端触摸兼容 ===
 function touchStarted() {
   mousePressed();
-  return false; // 防止浏览器页面滑动
+  return false;
 }
 
 function touchEnded() {
